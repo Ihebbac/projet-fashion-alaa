@@ -24,7 +24,7 @@ import {
     Modal,
     Form,
     Input,
-    
+    notification,
   } from "antd";
   import {
     DeleteTwoTone,
@@ -43,7 +43,7 @@ import {
   import { ToTopOutlined } from "@ant-design/icons";
   import { Link } from "react-router-dom";
   import React, { Component, useEffect, useRef, useState } from "react";
-
+  import axios from "axios";
   // Images
   import ava1 from "../assets/images/logo-shopify.svg";
   import ava2 from "../assets/images/logo-atlassian.svg";
@@ -350,7 +350,8 @@ import {
     const [Nom, setNom] = useState("");
     const [description, setdescription] = useState("");
     const [ThumbnailImage, setThumbnailImage] = useState("");
-  
+    const [data, setData] = useState([]);
+    const [isload, setisload] = useState(true);
     const [createdAt, setcreatedAt] = useState("");
     const [updatedAt, setupdatedAt] = useState("");
     const [isModalCat, setIsModalCat] = useState(false);
@@ -466,32 +467,64 @@ import {
       },
     ];
     
-    const data = [
-      {
-        "id" :1,
-        "name": "T-shirt pour homme",
-        "description": "T-shirt en coton de haute qualité pour homme.",
-        "thumbnailImage": "https://example.com/images/tshirt_homme.jpg",
-        "createdAt": "2024-01-01T12:00:00Z",
-        "updatedAt": "2024-01-15T12:00:00Z"
-      },
-      {
-        "id" :2,
-        "name": "Robe pour femme",
-        "description": "Robe élégante pour soirée pour femme.",
-        "thumbnailImage": "https://example.com/images/robe_femme.jpg",
-        "createdAt": "2024-02-01T12:00:00Z",
-        "updatedAt": "2024-02-15T12:00:00Z"
-      },
-      {
-        "id" :3,
-        "name": "Veste pour enfant",
-        "description": "Veste chaude et confortable pour enfant.",
-        "thumbnailImage": "https://example.com/images/veste_enfant.jpg",
-        "createdAt": "2024-03-01T12:00:00Z",
-        "updatedAt": "2024-03-15T12:00:00Z"
-      }
-    ]
+    // const data = [
+    //   {
+    //     "id" :1,
+    //     "name": "T-shirt pour homme",
+    //     "description": "T-shirt en coton de haute qualité pour homme.",
+    //     "thumbnailImage": "https://example.com/images/tshirt_homme.jpg",
+    //     "createdAt": "2024-01-01T12:00:00Z",
+    //     "updatedAt": "2024-01-15T12:00:00Z"
+    //   },
+    //   {
+    //     "id" :2,
+    //     "name": "Robe pour femme",
+    //     "description": "Robe élégante pour soirée pour femme.",
+    //     "thumbnailImage": "https://example.com/images/robe_femme.jpg",
+    //     "createdAt": "2024-02-01T12:00:00Z",
+    //     "updatedAt": "2024-02-15T12:00:00Z"
+    //   },
+    //   {
+    //     "id" :3,
+    //     "name": "Veste pour enfant",
+    //     "description": "Veste chaude et confortable pour enfant.",
+    //     "thumbnailImage": "https://example.com/images/veste_enfant.jpg",
+    //     "createdAt": "2024-03-01T12:00:00Z",
+    //     "updatedAt": "2024-03-15T12:00:00Z"
+    //   }
+    // ]
+    useEffect(() => {
+      axios
+        .get("http://localhost:3003/api/v1/categories")
+        .then((response) => {
+          console.log("response", response)
+          if (response.data.data) {
+            setData(response.data.data);
+            setisload(false);
+          } else {
+            notification.error({ message: "No Data Found" });
+            setisload(false);
+          }
+        });
+    }, []);
+    const onFinish = async (values) => {
+      setisload(true);
+      console.log("valuesssssss", values);
+      // const res = await axios
+      // .post(`http://localhost:3003/api/v1/categories/${values}`)
+      // .then(function (response) {
+      //   // handrefetech();
+      //   setisload(false);
+      // })
+      // .catch(function (err) {
+      //   console.log(err);
+      //   setisload(false);
+      // });
+    
+  
+      // console.log("data received:", res);
+      form.resetFields();
+    };
     return (
       <>
         <div className="tabled">
@@ -499,6 +532,7 @@ import {
             <Col xs="24" xl={24}>
               <Card
                 bordered={false}
+                loading={isload}
                 className="criclebox tablespace mb-24"
                 title="Liste des catégories"
                 extra={
@@ -539,11 +573,7 @@ import {
           footer={[
             <Row>
               <Col span={12} offset={6}>
-                <Button 
-                // onClick={handleOk2}
-                >
-                  <PlusCircleTwoTone /> Ajouter
-                </Button>
+             
 
                 <Button danger 
                 // onClick={handleCancel2}
@@ -567,7 +597,7 @@ import {
             wrapperCol={{
               span: 16,
             }}
-            // onFinish={onFinish}
+            onFinish={onFinish}
             // onFinishFailed={onFinishFailed}
             autoComplete="off"
             form={form}
@@ -641,6 +671,13 @@ import {
         />
       </Modal>
     </Form.Item>
+    <Button
+                onClick={()=> {
+                  console.log("zzzzz")
+                  form.submit()}}
+                >
+                  <PlusCircleTwoTone /> Ajouter
+                </Button>
           </Form>
         </Modal>
           </div>
