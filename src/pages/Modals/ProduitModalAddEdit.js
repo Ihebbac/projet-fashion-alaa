@@ -257,48 +257,79 @@ const ProduitModalAddEdit = (props) => {
                         <>
                           <Row>
                             <Col md={12}>
-                              <Form.Item shouldUpdate noStyle>
-                                {({ getFieldValue }) => {
-                                  return (
-                                    <Form.Item
-                                      name={[name, "images"]}
-                                      {...restField}
-                                    >
-                                      <Upload
-                                        className="avatar-uploader projects-uploader"
-                                        listType="picture-card"
-                                        fileList={
-                                          props.type === "EDIT" &&
-                                          !isNil(props?.record.option[key])
-                                            ? props?.record.option[key].images
-                                                .split(",")
-                                                ?.map((el, i) => ({
-                                                  uid: -i,
-                                                  name: el,
-                                                  status: "done",
-                                                  url: el,
-                                                }))
-                                            : []
-                                        }
-                                        multiple
+                              {props.type === "EDIT" ? (
+                                <Form.Item shouldUpdate noStyle>
+                                  {({ getFieldValue }) => {
+                                    return (
+                                      <Form.Item
+                                        name={[name, "images"]}
+                                        {...restField}
                                       >
-                                        <Button
-                                          icon={
-                                            <VerticalAlignTopOutlined
-                                              style={{
-                                                width: 20,
-                                                color: "#000",
-                                              }}
-                                            />
+                                        <Upload
+                                          className="avatar-uploader projects-uploader"
+                                          listType="picture-card"
+                                          fileList={
+                                            !isNil(props?.record.option[key])
+                                              ? props?.record.option[key].images
+                                                  .split(",")
+                                                  ?.map((el, i) => ({
+                                                    uid: -i,
+                                                    name: el,
+                                                    status: "done",
+                                                    url: el,
+                                                  }))
+                                              : []
                                           }
+                                          multiple
                                         >
-                                          Upload Images
-                                        </Button>
-                                      </Upload>
-                                    </Form.Item>
-                                  );
-                                }}
-                              </Form.Item>
+                                          <Button
+                                            icon={
+                                              <VerticalAlignTopOutlined
+                                                style={{
+                                                  width: 20,
+                                                  color: "#000",
+                                                }}
+                                              />
+                                            }
+                                          >
+                                            Upload Images
+                                          </Button>
+                                        </Upload>
+                                      </Form.Item>
+                                    );
+                                  }}
+                                </Form.Item>
+                              ) : (
+                                <Form.Item shouldUpdate noStyle>
+                                  {({ getFieldValue }) => {
+                                    return (
+                                      <Form.Item
+                                        name={[name, "images"]}
+                                        {...restField}
+                                      >
+                                        <Upload
+                                          className="avatar-uploader projects-uploader"
+                                          listType="picture-card"
+                                          multiple
+                                        >
+                                          <Button
+                                            icon={
+                                              <VerticalAlignTopOutlined
+                                                style={{
+                                                  width: 20,
+                                                  color: "#000",
+                                                }}
+                                              />
+                                            }
+                                          >
+                                            Upload Images
+                                          </Button>
+                                        </Upload>
+                                      </Form.Item>
+                                    );
+                                  }}
+                                </Form.Item>
+                              )}
                             </Col>
                           </Row>
 
