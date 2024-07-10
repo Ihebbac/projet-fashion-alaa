@@ -202,6 +202,8 @@ const Categorie = () => {
     {
       title: "Action",
       key: "action",
+      width: 200,
+      fixed: 'right',
       render: (_, record) => (
         <div className="action-buttons">
           <Row>
@@ -318,6 +320,7 @@ const Categorie = () => {
                 <Table
                   columns={columns}
                   dataSource={data}
+                  
                   pagination={true}
                   className="ant-border-space"
                 />

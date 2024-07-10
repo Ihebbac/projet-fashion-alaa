@@ -480,6 +480,7 @@ import {
       {
         title: "Action",
         key: "action",
+        width: 300,
         render: (_, record) => (
           <div className="action-buttons">
                <Row >

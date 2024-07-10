@@ -170,11 +170,7 @@ const AddOrUpdateModalCars = (props) => {
       src={previewImage}
     />
   </Modal>
-    <Form
-      form={form}
-      onFinish={handleonfinish}
-      preserve={props.type === "EDIT" ? true : false}
-    >
+
       <div className="site-card-border-less-wrapper">
         <Modal
           title={props.type === "EDIT" ? "Modifier" : "Ajouter"}
@@ -186,12 +182,18 @@ const AddOrUpdateModalCars = (props) => {
           width={1000}
           onCancel={onCancel}
         >
+              <Form
+      form={form}
+      onFinish={handleonfinish}
+      preserve={props.type === "EDIT" ? true : false}
+    >
           <Card
             centered
             style={{
               width: "100%",
               height: "100%",
             }}
+            hoverable
           >
             <Row justify="space-between" gutter={16}>
               <Col span={24}>
@@ -251,38 +253,46 @@ const AddOrUpdateModalCars = (props) => {
                   </Form.Item>
                 )}
               </Col>
-
-              <Col span={24}>
-                <Form.Item
-                  name="name"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Veuillez entrer le nom!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nom de la catégorie" type="name" />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item
-                  name="description"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Merci de saisir la description!",
-                    },
-                  ]}
-                >
-                  <TextArea placeholder="Déscription" type="textarea" />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
+              </Row>
+              </Card>
+              <Card
+            centered
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+            hoverable
+          > <Col span={24}>
+          <Form.Item
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Veuillez entrer le nom!",
+              },
+            ]}
+          >
+            <Input placeholder="Nom de la catégorie" type="name" />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            name="description"
+            rules={[
+              {
+                required: true,
+                message: "Merci de saisir la description!",
+              },
+            ]}
+          >
+            <TextArea placeholder="Déscription" type="textarea" />
+          </Form.Item>
+        </Col></Card>
+             
+        </Form>
         </Modal>
       </div>
-    </Form>
+   
     
   </>
   );
