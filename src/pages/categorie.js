@@ -182,7 +182,7 @@ const Categorie = () => {
       dataIndex: "createdAt",
       render: (x) => 
         { const dateObject = datetime(x); 
-          console.log("zzzzz", dateObject);
+        
           const formattedDate = dateObject.format("DD/MM/YYYY");
           return <time>{formattedDate}</time>;
         } 
@@ -194,7 +194,7 @@ const Categorie = () => {
       dataIndex: "updatedAt",
       render: (x) => 
         { const dateObject = datetime(x); 
-          console.log("zzzzz", dateObject);
+       
           const formattedDate = dateObject.format("DD/MM/YYYY");
           return <time>{formattedDate}</time>;
         } 
