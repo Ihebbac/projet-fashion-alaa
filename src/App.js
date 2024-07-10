@@ -13,6 +13,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home";
 import Tables from "./pages/Tables";
 import Categorie from "./pages/categorie";
+import Customers from "./pages/customers";
 import Produit from "./pages/Produit";
 import Billing from "./pages/Billing";
 import Rtl from "./pages/Rtl";
@@ -34,6 +35,7 @@ function App() {
           <Route exact path="/dashboard" component={Home} />
           <Route exact path="/tables" component={Tables} />
           <Route exact path="/categorie" component={Categorie} />
+          <Route exact path="/customers" component={Customers} />
           <Route exact path="/produit" component={Produit} />
           <Route exact path="/billing" component={Billing} />
           <Route exact path="/rtl" component={Rtl} />
