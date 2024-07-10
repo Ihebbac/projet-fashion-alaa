@@ -57,6 +57,7 @@ import face4 from "../assets/images/face-4.jpg";
 import face5 from "../assets/images/face-5.jpeg";
 import face6 from "../assets/images/face-6.jpeg";
 import pencil from "../assets/images/pencil.svg";
+import CategorieModalAddEdit from "./Modals/CategorieModalAddEdit";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -338,10 +339,10 @@ const Categorie = () => {
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([
     {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      uid: "-1",
+      name: "image.png",
+      status: "done",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
     },
   ]);
   const [Nom, setNom] = useState("");
@@ -353,6 +354,11 @@ const Categorie = () => {
   const [createdAt, setcreatedAt] = useState("");
   const [updatedAt, setupdatedAt] = useState("");
   const [isModalCat, setIsModalCat] = useState(false);
+
+  const [visible, setVisible] = useState(false);
+  const [action, setAction] = useState("");
+  const [record, setrecord] = useState({});
+
   const [form] = Form.useForm();
   const handrefetech = () => {
     setrefetech(!refetech);
@@ -363,7 +369,7 @@ const Categorie = () => {
   const show = (dar) => {
     console.log("ihekkkkk", dar);
   };
-  const showPromiseConfirm =  (alldata, dataDelete) => {
+  const showPromiseConfirm = (alldata, dataDelete) => {
     console.log("d", alldata);
     confirm({
       title: "Vous voulez supprimer " + alldata.name + "?",
@@ -374,7 +380,7 @@ const Categorie = () => {
         " " +
         " sera supprimer !",
 
-        async  onOk() {
+      async onOk() {
         console.log("Success delete ", dataDelete);
         setisload(true);
         await axios
@@ -548,7 +554,14 @@ const Categorie = () => {
               title="Liste des catégories"
               extra={
                 <>
-                  <Button type="primary" onClick={showModalCat}>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setVisible(true);
+                      setrecord({});
+                      setAction("ADD");
+                    }}
+                  >
                     Ajouter une catégorie
                   </Button>
                 </>
@@ -565,142 +578,13 @@ const Categorie = () => {
             </Card>
           </Col>
         </Row>
-        <div>
-          <Modal
-            title={[
-              <div
-                style={{
-                  // backgroundColor: "#C8C1BF",
-                  color: "#2A1F69",
-                }}
-              >
-                <AppstoreAddOutlined twoToneColor="#2A1F69" />
-                Ajouter une nouvelle catégorie{" "}
-              </div>,
-            ]}
-            visible={isModalCat}
-            onCancel={handleCancel}
-            footer={[
-              <Row>
-                <Col span={12} offset={6}>
-                  <Button
-                    danger
-                    // onClick={handleCancel2}
-                  >
-                    {" "}
-                    <CloseCircleTwoTone twoToneColor="#FF0000" /> Annuler{" "}
-                  </Button>
-                </Col>
-              </Row>,
-            ]}
-            maskClosable={true}
-            // onCancel={handleCancel2}
-            width={500}
-            centered
-          >
-            <Form
-              name="basic"
-              labelCol={{
-                span: 8,
-              }}
-              wrapperCol={{
-                span: 16,
-              }}
-              onFinish={onFinish}
-              // onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              form={form}
-            >
-              <Form.Item
-                label="Nom de la catégorie"
-                name="name"
-                rules={[
-                  {
-                    required: true,
-                    message: "veillez remplir le nom svp!",
-                  },
-                  { whitespace: true },
-                  { min: 3 },
-                ]}
-                hasFeedback
-              >
-                <Input
-                  size="small"
-                  // defaultValue={nom}
-                  allowClear
-                  // onChange={handleChange}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="Déscriprion"
-                name="description"
-                rules={[
-                  {
-                    required: true,
-                    message: "veillez remplir la déscription de la catégorie",
-                  },
-                ]}
-                hasFeedback
-              >
-                <Input
-                  size="small"
-                  // defaultValue={tel}
-                  allowClear
-                  // onChange={handleChange}
-                />
-              </Form.Item>
-              <Form.Item
-                label="ThumbnailImage"
-                name="ThumbnailImage"
-                // rules={[
-                //   {
-                //     required: true,
-                //     message:
-                //       "veillez remplir le ThumbnailImage de la catégorie",
-                //   },
-                // ]}
-                defaultValue={fileList}
-                hasFeedback
-              >
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  accept="image/*,.pdf"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  multiple
-                  
-                  onChange={handleChange}
-                >
-                  {fileList.length >= 8 ? null : uploadButton}
-                </Upload>
-                <Modal
-                  visible={previewOpen}
-                  title={previewTitle}
-                  footer={null}
-                  onCancel={handleCancelimg}
-                >
-                  <img
-                    alt="example"
-                    style={{
-                      width: "100%",
-                    }}
-                    src={previewImage}
-                  />
-                </Modal>
-              </Form.Item>
-              <Button
-                onClick={() => {
-                  console.log("zzzzz");
-                  form.submit();
-                }}
-              >
-                <PlusCircleTwoTone /> Ajouter
-              </Button>
-            </Form>
-          </Modal>
-        </div>
+        <CategorieModalAddEdit
+          visible={visible}
+          record={action === "EDIT" ? record : {}}
+          refetech={handrefetech}
+          type={action}
+          onCancel={() => setVisible(false)}
+        />
       </div>
     </>
   );
