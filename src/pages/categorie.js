@@ -57,27 +57,11 @@ import face4 from "../assets/images/face-4.jpg";
 import face5 from "../assets/images/face-5.jpeg";
 import face6 from "../assets/images/face-6.jpeg";
 import pencil from "../assets/images/pencil.svg";
-import CategorieModalAddEdit from "./Modals/CategorieModalAddEdit";
+import CategorieModalAddEdit from "./Modals/CategorieModalAddEdit.js";
 
 const { Title } = Typography;
 const { confirm } = Modal;
-const formProps = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
+
 // table code start
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -398,25 +382,7 @@ const Categorie = () => {
       onCancel() {},
     });
   };
-  const showModalCat = () => {
-    setIsModalCat(true);
-  };
-  const handleCancel = () => {
-    setIsModalCat(false);
-  };
-  const handleCancelimg = () => setPreviewOpen(false);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      console.log("iffff");
-      file.preview = await getBase64(file.originFileObj);
-    }
-    console.log("!!!!!! iffff");
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
-  };
+
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
   const uploadButton = (
     <div>
@@ -447,6 +413,7 @@ const Categorie = () => {
       title: "ThumbnailImage",
       key: "thumbnailImage",
       dataIndex: "thumbnailImage",
+      render: (text) => <img src={text} width={40} />,
     },
     {
       title: "createdAt",
@@ -466,7 +433,13 @@ const Categorie = () => {
           <Row>
             <Col span={12}>
               {" "}
-              <Button onClick={() => show(record)}>
+              <Button
+                onClick={() => {
+                  setVisible(true);
+                  setrecord(record);
+                  setAction("EDIT");
+                }}
+              >
                 <EditTwoTone />
               </Button>
             </Col>
