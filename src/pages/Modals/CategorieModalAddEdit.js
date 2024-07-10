@@ -16,11 +16,12 @@ import {
   Tag,
   Upload,
 } from "antd";
+
 import { useForm } from "antd/lib/form/Form";
 import React, { useEffect, useState } from "react";
 import { notification } from "antd";
 import axios from "axios";
-import { VerticalAlignTopOutlined } from "@ant-design/icons";
+import { CloudUploadOutlined, VerticalAlignTopOutlined } from "@ant-design/icons";
 import { isNil } from "lodash";
 import TextArea from "antd/lib/input/TextArea";
 const { Option } = Select;
@@ -28,6 +29,8 @@ const { Option } = Select;
 const AddOrUpdateModalCars = (props) => {
   const { visible, onCancel } = props;
   const [Loading, setLoading] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
   const serverURL = "http://127.0.0.1:3003";
 
   const [form] = useForm();
@@ -141,8 +144,32 @@ const AddOrUpdateModalCars = (props) => {
         });
     }
   };
-
+  const handlePreview = async (file) => {
+    console.log("file",file)
+    // if (!file.url && !file.preview) {
+    //   file.preview = await getBase64(file.originFileObj);
+    // }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    // setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+  };
   return (
+    <>
+    <Modal visible={previewOpen}
+    //  title={previewTitle} 
+     footer={null} 
+     onCancel={() => setPreviewOpen(!previewOpen)
+      && setPreviewImage("")
+     }
+     >
+    <img
+      alt={previewImage?.name}
+      style={{
+        width: '100%',
+      }}
+      src={previewImage}
+    />
+  </Modal>
     <Form
       form={form}
       onFinish={handleonfinish}
@@ -150,7 +177,7 @@ const AddOrUpdateModalCars = (props) => {
     >
       <div className="site-card-border-less-wrapper">
         <Modal
-          title={props.type === "EDIT" ? "UPDATE" : "CREATE"}
+          title={props.type === "EDIT" ? "Modifier" : "Ajouter"}
           visible={visible}
           destroyOnClose
           onOk={() => {
@@ -206,16 +233,16 @@ const AddOrUpdateModalCars = (props) => {
                                   }))
                                 : []
                             }
+                            onPreview={handlePreview}
                             multiple
                           >
                             <Button
                               icon={
-                                <VerticalAlignTopOutlined
-                                  style={{ width: 20, color: "#000" }}
-                                />
+                                <CloudUploadOutlined  style={{ width: 20, height : 19, color: "#000" }}/>
+                               
                               }
                             >
-                              Upload Images
+                              Importer des images
                             </Button>
                           </Upload>
                         </Form.Item>
@@ -231,11 +258,11 @@ const AddOrUpdateModalCars = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your name!",
+                      message: "Veuillez entrer le nom!",
                     },
                   ]}
                 >
-                  <Input placeholder="name" type="name" />
+                  <Input placeholder="Nom de la catégorie" type="name" />
                 </Form.Item>
               </Col>
               <Col span={24}>
@@ -244,11 +271,11 @@ const AddOrUpdateModalCars = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your description!",
+                      message: "Merci de saisir la description!",
                     },
                   ]}
                 >
-                  <TextArea placeholder="description" type="textarea" />
+                  <TextArea placeholder="Déscription" type="textarea" />
                 </Form.Item>
               </Col>
             </Row>
@@ -256,6 +283,8 @@ const AddOrUpdateModalCars = (props) => {
         </Modal>
       </div>
     </Form>
+    
+  </>
   );
 };
 
