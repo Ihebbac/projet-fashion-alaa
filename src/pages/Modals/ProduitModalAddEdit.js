@@ -268,6 +268,7 @@ const ProduitModalAddEdit = (props) => {
                                         className="avatar-uploader projects-uploader"
                                         listType="picture-card"
                                         fileList={
+                                          props.type === "EDIT" &&
                                           !isNil(props?.record.option[key])
                                             ? props?.record.option[key].images
                                                 .split(",")
