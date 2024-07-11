@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-useless-computed-key */
 /* eslint-disable no-useless-concat */
 import {
@@ -27,14 +28,15 @@ import {
   PlusOutlined,
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
-import { isNil } from "lodash";
+import { isNil, isEmpty, uniq } from "lodash";
 import TextArea from "antd/lib/input/TextArea";
-const { Option } = Select;
+import { CirclePicker } from "react-color";
 
 const ProduitModalAddEdit = (props) => {
   const { visible, onCancel } = props;
   const [Loading, setLoading] = useState(false);
   const [cat, setcat] = useState([]);
+  const [images, setimages] = useState([]);
   const serverURL = "http://127.0.0.1:3003";
 
   const [form] = useForm();
@@ -51,27 +53,78 @@ const ProduitModalAddEdit = (props) => {
 
     if (props.type === "EDIT") {
       form.setFieldsValue({
-        ...props?.record,
+        categoryId: props?.record.categoryId,
+        description: props?.record.description,
+        detail: props?.record.detail,
+        name: props?.record.name,
+        createdAt: props?.record.createdAt,
+        updatedAt: props?.record.createdAt,
         options: props?.record.option.map((el) => ({
           ...el,
-          colors: el.color,
-          images: el.images?.split(","),
-          sizes: el.size?.split(","),
-          stock: el.stock,
-          price: el.price,
+          colors: el?.color,
+          images: el?.images?.split(","),
+          sizes: el?.size?.split(","),
+          stock: el?.stock,
+          price: el?.price,
+          id: el.id,
         })),
       });
-    } else {
-      form.setFieldsValue({
-        images: [],
-      });
-    }
-  }, [form, props.record, props.visible]);
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
+      let list = [];
+      props?.record.option.forEach((el) => {
+        list = [
+          ...list,
+          isEmpty(el?.images?.split(",")) ? [] : el?.images?.split(","),
+        ];
+      });
+
+      console.log("list", list);
+      setimages(list);
+    } else {
+      form.setFieldsValue({});
+      setimages([]);
+    }
+  }, [form, props.record, props.visibl]);
+
+  const handleChange = async (info, key) => {
+    const oldimges = [...images];
+
+    setLoading(true);
+    try {
+      const listOfPromise = [];
+      info?.fileList?.forEach((el) => {
+        if (!isNil(el?.originFileObj?.name)) {
+          var bodyFormData = new FormData();
+
+          bodyFormData.append("images", el?.originFileObj);
+
+          if (!oldimges[key]) {
+            oldimges[key] = [];
+          }
+
+          const Listimages = oldimges[key];
+
+          Listimages.push("http://127.0.0.1:3003" + "/images/" + el?.name);
+          console.log("oldimges", oldimges);
+
+          setimages(oldimges);
+
+          listOfPromise.push(
+            axios({
+              method: "post",
+              url: "http://127.0.0.1:3003" + "/api/upload",
+              data: bodyFormData,
+              headers: { "Content-Type": "multipart/form-data" },
+            })
+          );
+        }
+      });
+      await Promise.all(listOfPromise);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
   };
 
   const handleonfinish = async (val) => {
@@ -87,77 +140,53 @@ const ProduitModalAddEdit = (props) => {
       id: props.record.id,
     };
 
-    // const option = values?.options?.map((el) => ({
-    //   ...el,
-    //   images: el.images.fileList
-    //     .map(
-    //       (elm) =>
-    //         "http://127.0.0.1:3003" + "/images/" + elm?.originFileObj?.name
-    //     )
-    //     .join(","),
-    //   sizes: el.sizes.join(","),
-    //   price: Number(el.price),
-    //   stock: Number(el.stock),
-    // }));
+    const option = values?.options?.map((el, key) => ({
+      ...el,
+      images: images[key].join(","),
+      sizes: el.sizes.join(","),
+      price: Number(el.price),
+      stock: Number(el.stock),
+      color: el.colors,
+      id: el?.id,
+    }));
 
-    // if (props.type !== "EDIT") {
-    //   const listOfPromise = [];
-    //   values?.options?.forEach((elm) => {
-    //     elm.images.fileList.forEach((el) => {
-    //       var bodyFormData = new FormData();
-
-    //       bodyFormData.append("images", el.originFileObj);
-    //       listOfPromise.push(
-    //         axios({
-    //           method: "post",
-    //           url: "http://127.0.0.1:3003" + "/api/upload",
-    //           data: bodyFormData,
-    //           headers: { "Content-Type": "multipart/form-data" },
-    //         })
-    //       );
-    //     });
-    //   });
-    //   await Promise.all(listOfPromise);
-    // }
-
-    // if (props.type === "EDIT") {
-    //   await axios
-    //     .put("http://127.0.0.1:3003/api/v1/products/" + values.id, {
-    //       name: values.name,
-    //       description: values.description,
-    //       detail: values.detail,
-    //       categoryId: values.categoryId,
-    //       option: option,
-    //     })
-    //     .then((response) => {
-    //       notification.success({ message: "Update Done  " });
-    //       props.refetech();
-    //       onCancel();
-    //     })
-    //     .catch(function (err) {
-    //       props.refetech();
-    //       onCancel();
-    //     });
-    // } else {
-    //   console.log("from", form.getFieldValue("data"));
-    //   await axios
-    //     .post("http://127.0.0.1:3003/api/v1/products", {
-    //       name: values.name,
-    //       description: values.description,
-    //       detail: values.detail,
-    //       categoryId: values.categoryId,
-    //       option: option,
-    //     })
-    //     .then((response) => {
-    //       notification.success({ message: "Create Done  " });
-    //       props.refetech();
-    //       onCancel();
-    //     })
-    //     .catch(function (err) {
-    //       props.refetech();
-    //       onCancel();
-    //     });
-    // }
+    if (props.type === "EDIT") {
+      await axios
+        .put("http://127.0.0.1:3003/api/v1/products/" + values.id, {
+          name: values.name,
+          description: values.description,
+          detail: values.detail,
+          categoryId: values.categoryId,
+          option: option,
+        })
+        .then((response) => {
+          notification.success({ message: "Update Done  " });
+          props.refetech();
+          onCancel();
+        })
+        .catch(function (err) {
+          props.refetech();
+          onCancel();
+        });
+    } else {
+      await axios
+        .post("http://127.0.0.1:3003/api/v1/products", {
+          name: values.name,
+          description: values.description,
+          detail: values.detail,
+          categoryId: values.categoryId,
+          option: option,
+        })
+        .then((response) => {
+          notification.success({ message: "Create Done  " });
+          props.refetech();
+          onCancel();
+        })
+        .catch(function (err) {
+          props.refetech();
+          onCancel();
+        });
+    }
 
     console.log("eeeeeeeeeeeeeeeee", values);
   };
@@ -256,84 +285,6 @@ const ProduitModalAddEdit = (props) => {
                       {fields.map(({ key, name, ...restField }) => (
                         <>
                           <Row>
-                            <Col md={12}>
-                              {props.type === "EDIT" ? (
-                                <Form.Item shouldUpdate noStyle>
-                                  {({ getFieldValue }) => {
-                                    return (
-                                      <Form.Item
-                                        name={[name, "images"]}
-                                        {...restField}
-                                      >
-                                        <Upload
-                                          className="avatar-uploader projects-uploader"
-                                          listType="picture-card"
-                                          fileList={
-                                            !isNil(props?.record.option[key])
-                                              ? props?.record.option[key].images
-                                                  .split(",")
-                                                  ?.map((el, i) => ({
-                                                    uid: -i,
-                                                    name: el,
-                                                    status: "done",
-                                                    url: el,
-                                                  }))
-                                              : []
-                                          }
-                                          multiple
-                                        >
-                                          <Button
-                                            icon={
-                                              <VerticalAlignTopOutlined
-                                                style={{
-                                                  width: 20,
-                                                  color: "#000",
-                                                }}
-                                              />
-                                            }
-                                          >
-                                            Upload Images
-                                          </Button>
-                                        </Upload>
-                                      </Form.Item>
-                                    );
-                                  }}
-                                </Form.Item>
-                              ) : (
-                                <Form.Item shouldUpdate noStyle>
-                                  {({ getFieldValue }) => {
-                                    return (
-                                      <Form.Item
-                                        name={[name, "images"]}
-                                        {...restField}
-                                      >
-                                        <Upload
-                                          className="avatar-uploader projects-uploader"
-                                          listType="picture-card"
-                                          multiple
-                                        >
-                                          <Button
-                                            icon={
-                                              <VerticalAlignTopOutlined
-                                                style={{
-                                                  width: 20,
-                                                  color: "#000",
-                                                }}
-                                              />
-                                            }
-                                          >
-                                            Upload Images
-                                          </Button>
-                                        </Upload>
-                                      </Form.Item>
-                                    );
-                                  }}
-                                </Form.Item>
-                              )}
-                            </Col>
-                          </Row>
-
-                          <Row>
                             <Col
                               span={12}
                               style={{ marginRight: 10 }}
@@ -349,7 +300,21 @@ const ProduitModalAddEdit = (props) => {
                                   },
                                 ]}
                               >
-                                <Input type="color" value="#e66465" />
+                                <CirclePicker
+                                  color={
+                                    form.getFieldValue("options")[key].colors
+                                  }
+                                  onChangeComplete={(val) => {
+                                    let oldOption =
+                                      form.getFieldValue("options");
+                                    oldOption[key] = {
+                                      ...oldOption[key],
+                                      color: val.hex,
+                                    };
+
+                                    form.setFieldsValue("options",oldOption);
+                                  }}
+                                />
                               </Form.Item>
                             </Col>
 
@@ -408,14 +373,75 @@ const ProduitModalAddEdit = (props) => {
                                 <Input placeholder="stock" />
                               </Form.Item>
                             </Col>
+                          </Row>
+
+                          <Row>
+                            <Col md={12}>
+                              <Form.Item shouldUpdate noStyle>
+                                {({ getFieldValue }) => {
+                                  return (
+                                    <Form.Item
+                                      name={[name, "images"]}
+                                      {...restField}
+                                    >
+                                      <Upload
+                                        className="avatar-uploader projects-uploader"
+                                        onChange={(val) =>
+                                          handleChange(val, key)
+                                        }
+                                        onRemove={(val) => {
+                                          const oldimges = [...images];
+
+                                          if (!isEmpty(oldimges[key])) {
+                                            oldimges[key] = oldimges[
+                                              key
+                                            ].filter((el) => el !== val.name);
+
+                                            setimages(oldimges);
+                                          }
+                                        }}
+                                        onDrop={(val) => handleChange(val, key)}
+                                        listType="picture-card"
+                                        fileList={
+                                          !isEmpty(images) &&
+                                          !isNil(images) &&
+                                          !isNil(images[key])
+                                            ? images[key]?.map((el, i) => ({
+                                                uid: -i,
+                                                name: el,
+                                                status: "done",
+                                                url: el,
+                                              }))
+                                            : []
+                                        }
+                                        multiple={false}
+                                      >
+                                        <Button
+                                          icon={
+                                            <VerticalAlignTopOutlined
+                                              style={{
+                                                width: 20,
+                                                color: "#000",
+                                              }}
+                                            />
+                                          }
+                                        >
+                                          Upload Images
+                                        </Button>
+                                      </Upload>
+                                    </Form.Item>
+                                  );
+                                }}
+                              </Form.Item>
+                            </Col>
 
                             <Col
                               span={6}
-                              style={{ marginRight: 10, marginTop: 10 }}
+                              style={{ marginRight: 25, marginTop: 10 }}
                             >
                               <MinusCircleOutlined
                                 onClick={() => remove(name)}
-                                style={{ marginRight: 10 }}
+                                style={{ marginLeft: 40, marginTop: 10 }}
                               />
                             </Col>
                           </Row>
