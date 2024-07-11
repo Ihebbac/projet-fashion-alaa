@@ -212,7 +212,7 @@ function Sidenav({ color }) {
             <span
               className="icon"
               style={{
-                background: page === "customers" ? color : "",
+                background: page === "clients" ? color : "",
               }}
             >
               {tables}

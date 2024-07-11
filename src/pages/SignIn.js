@@ -10,7 +10,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory   } from "react-router-dom";
 import {
   Layout,
   Menu,
@@ -21,17 +21,22 @@ import {
   Form,
   Input,
   Switch,
+  notification,
+  message,
 } from "antd";
-import signinbg from "../assets/images/img-signin.jpg";
+import signinbg from "../assets/images/men39s-clothes-hanger-generative-ai (1).jpg"
 import {
   DribbbleOutlined,
   TwitterOutlined,
   InstagramOutlined,
   GithubOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
 function onChange(checked) {
   console.log(`switch to ${checked}`);
 }
+
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
 const template = [
@@ -114,10 +119,43 @@ const signin = [
     />
   </svg>,
 ];
+
 export default class SignIn extends Component {
+
   render() {
     const onFinish = (values) => {
       console.log("Success:", values);
+
+        const res = axios.post("http://localhost:3003/api/v1/admins/login", {
+          email: values.email,
+          password: values.password,
+        }).then((response) => {
+          console.log("zzzzzz", response);
+          notification.success({
+            message: `Bienvenue ! ` ,
+            description:
+            'mar7beeeeeeeee bik ',
+          placement:'top',
+          });
+          let history  = useHistory();
+          history.push('/dashboard');
+          // if (response.data.data) {
+          //   setData(response.data.data);
+          //   setisload(false);
+          // } else {
+          //   notification.error({ message: "No Data Found" });
+          //   setisload(false);
+          // }
+        }).catch((error) => {
+          console.error("error", error);
+          notification.error({
+            message: error.response.data.error.message,
+            description:
+            'Veuillez vérifier votre adresse e-mail ou votre mot de passe s\'il vous plaît.',
+          placement:'top'
+          });
+        });
+console.log("res", res)
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -128,16 +166,16 @@ export default class SignIn extends Component {
         <Layout className="layout-default layout-signin">
           <Header>
             <div className="header-col header-brand">
-              <h5>Muse Dashboard</h5>
+              <h5>Fashion Dashboard</h5>
             </div>
             <div className="header-col header-nav">
               <Menu mode="horizontal" defaultSelectedKeys={["1"]}>
-                <Menu.Item key="1">
+                {/* <Menu.Item key="1">
                   <Link to="/dashboard">
                     {template}
                     <span> Dashboard</span>
                   </Link>
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item key="2">
                   <Link to="/profile">
                     {profile}
@@ -158,9 +196,9 @@ export default class SignIn extends Component {
                 </Menu.Item>
               </Menu>
             </div>
-            <div className="header-col header-btn">
+            {/* <div className="header-col header-btn">
               <Button type="primary">FREE DOWNLOAD</Button>
-            </div>
+            </div> */}
           </Header>
           <Content className="signin">
             <Row gutter={[24, 0]} justify="space-around">
@@ -169,9 +207,9 @@ export default class SignIn extends Component {
                 lg={{ span: 6, offset: 2 }}
                 md={{ span: 12 }}
               >
-                <Title className="mb-15">Sign In</Title>
+                <Title className="mb-15">Se connecter...</Title>
                 <Title className="font-regular text-muted" level={5}>
-                  Enter your email and password to sign in
+                Entrez votre adresse e-mail et votre mot de passe pour vous connecter
                 </Title>
                 <Form
                   onFinish={onFinish}
@@ -186,7 +224,7 @@ export default class SignIn extends Component {
                     rules={[
                       {
                         required: true,
-                        message: "Please input your email!",
+                        message: "Veuillez entrer votre adresse e-mail!",
                       },
                     ]}
                   >
@@ -195,12 +233,12 @@ export default class SignIn extends Component {
 
                   <Form.Item
                     className="username"
-                    label="Password"
+                    label=" mot de passe"
                     name="password"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your password!",
+                        message: "Veuillez entrer votre mot de passe !",
                       },
                     ]}
                   >
@@ -213,7 +251,7 @@ export default class SignIn extends Component {
                     valuePropName="checked"
                   >
                     <Switch defaultChecked onChange={onChange} />
-                    Remember me
+                    Se souvenir de moi
                   </Form.Item>
 
                   <Form.Item>
@@ -222,15 +260,15 @@ export default class SignIn extends Component {
                       htmlType="submit"
                       style={{ width: "100%" }}
                     >
-                      SIGN IN
+                      SE CONNECTER
                     </Button>
                   </Form.Item>
-                  <p className="font-semibold text-muted">
+                  {/* <p className="font-semibold text-muted">
                     Don't have an account?{" "}
                     <Link to="/sign-up" className="text-dark font-bold">
                       Sign Up
                     </Link>
-                  </p>
+                  </p> */}
                 </Form>
               </Col>
               <Col
