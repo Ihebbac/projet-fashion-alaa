@@ -311,8 +311,8 @@ const ProduitModalAddEdit = (props) => {
                                     "#dce775",
                                     "#ff8a65",
                                     "#ba68c8",
-                                    "#fff",
-                                    "#000"
+                                    "#ffffff",
+                                    "#000000"
 
                                   ]}
                                   color={
