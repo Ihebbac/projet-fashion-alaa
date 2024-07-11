@@ -305,14 +305,15 @@ const ProduitModalAddEdit = (props) => {
                                     form.getFieldValue("options")[key].colors
                                   }
                                   onChangeComplete={(val) => {
+
                                     let oldOption =
                                       form.getFieldValue("options");
                                     oldOption[key] = {
                                       ...oldOption[key],
-                                      color: val.hex,
+                                      colors: val.hex,
                                     };
 
-                                    form.setFieldsValue("options",oldOption);
+                                    form.setFieldsValue("options", oldOption);
                                   }}
                                 />
                               </Form.Item>
