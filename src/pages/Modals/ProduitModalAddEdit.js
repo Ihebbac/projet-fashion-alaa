@@ -301,11 +301,24 @@ const ProduitModalAddEdit = (props) => {
                                 ]}
                               >
                                 <CirclePicker
+                                  colors={[
+                                    "#D9E3F0",
+                                    "#F47373",
+                                    "#697689",
+                                    "#37D67A",
+                                    "#2CCCE4",
+                                    "#555555",
+                                    "#dce775",
+                                    "#ff8a65",
+                                    "#ba68c8",
+                                    "#fff",
+                                    "#000"
+
+                                  ]}
                                   color={
                                     form.getFieldValue("options")[key].colors
                                   }
                                   onChangeComplete={(val) => {
-
                                     let oldOption =
                                       form.getFieldValue("options");
                                     oldOption[key] = {
