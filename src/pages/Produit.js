@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /*!
 =========================================================
 * Muse Ant Design Dashboard - v1.0.0
@@ -25,6 +26,11 @@ import {
   Form,
   Input,
   notification,
+  Image,
+  Space,
+  Tag,
+  Carousel,
+  Badge,
 } from "antd";
 import {
   DeleteTwoTone,
@@ -93,6 +99,7 @@ const Produit = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [optionColor, setoptionColor] = useState("");
   const [fileList, setFileList] = useState([
     // {
     //   uid: '-1',
@@ -112,8 +119,10 @@ const Produit = () => {
 
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState("");
-  const [record, setrecord] = useState({});
+  const [record, setrecord] = useState(null);
+  const [recordOption, setrecordOption] = useState(null);
   const [refetech, setrefetech] = useState(false);
+  const [show, setshow] = useState(false);
 
   useEffect(() => {
     axios.get("http://localhost:3003/api/v1/products").then((response) => {
@@ -131,20 +140,16 @@ const Produit = () => {
   };
 
   const showPromiseConfirm = (alldata, dataDelete) => {
-    console.log("d", alldata);
     confirm({
-      title: "Vous voulez supprimer " + alldata.fullname + "?",
+      title: "Vous voulez supprimer " + alldata.name + "?",
       icon: <ExclamationCircleOutlined />,
-      content:
-        "lorsque vous appuillez sur ok l'utilisateur : " +
-        alldata.fullname +
-        " " +
-        " sera supprimer !",
-
       onOk() {
-        console.log("Success", dataDelete);
-
-        message.success("Catégorie supprimer avec succee..................");
+        axios
+          .delete("http://localhost:3003/api/v1/products/" + dataDelete)
+          .then((response) => {
+            message.success("Produit supprimer avec success.");
+            handrefetech();
+          });
       },
       onCancel() {},
     });
@@ -152,6 +157,8 @@ const Produit = () => {
   const showModalCat = () => {
     setIsModalCat(true);
   };
+
+  console.log("record", record);
 
   const columns = [
     {
@@ -169,6 +176,9 @@ const Produit = () => {
       title: "Déscription",
       key: "description",
       dataIndex: "description",
+      with: 100,
+      ellipsis: true,
+      // render: (text) => <div className="text-truncate">{text}</div>,
     },
 
     {
@@ -188,7 +198,7 @@ const Produit = () => {
       render: (_, record) => (
         <div className="action-buttons">
           <Row>
-            <Col span={6}>
+            <Col span={8} className="ms-2">
               {" "}
               <Button
                 onClick={() => {
@@ -200,27 +210,28 @@ const Produit = () => {
                 <EditTwoTone />
               </Button>
             </Col>
-
-            <Col span={6}>
+            <Col span={8} className="ms-2">
               {" "}
               <Button
-                type="primary "
+                onClick={() => {
+                  setshow(true);
+                  setrecord(record);
+                  setrecordOption(record?.option);
+                  setoptionColor(record?.option[0].color);
+                }}
+              >
+                <InfoCircleOutlined />
+              </Button>
+            </Col>
+
+            <Col span={8}>
+              {" "}
+              <Button
+                type="primary"
                 danger
                 onClick={() => showPromiseConfirm(record, record.id)}
               >
                 <DeleteTwoTone twoToneColor="#FFFFFF" />
-              </Button>
-            </Col>
-            <Col span={6}>
-              {" "}
-              <Button
-                onClick={() => {
-                  setVisible(true);
-                  setrecord(record);
-                  setAction("EDIT");
-                }}
-              >
-                <InfoCircleOutlined />
               </Button>
             </Col>
           </Row>
@@ -272,6 +283,106 @@ const Produit = () => {
           type={action}
           onCancel={() => setVisible(false)}
         />
+
+        <Modal
+          visible={show}
+          destroyOnClose
+          width={1000}
+          onCancel={() => setshow(false)}
+        >
+          {record && (
+            <Badge.Ribbon
+              style={{ marginTop: 15 }}
+              color="red"
+              text={`       ${
+                recordOption &&
+                (recordOption.filter((el) => el.color === optionColor)[0]
+                  ?.discount ??
+                  0)
+              } % 
+                   `}
+            >
+              <Card>
+                <Row>
+                  <Col span={12}>
+                    <div className="ant-row-flex ant-row-flex-center">
+                      {/* <Image
+                     src={
+                       record &&
+                       recordOption
+                         .filter((el) => el.color === optionColor)[0]
+                         ?.images?.split(",")[0]
+                     }
+                     width={300}
+                   /> */}
+
+                      <Carousel autoplay>
+                        {record &&
+                          recordOption
+                            ?.filter((el) => el.color === optionColor)[0]
+                            ?.images?.split(",")
+                            ?.map((el) => {
+                              return <Image src={el} width={"90%"} />;
+                            })}
+                      </Carousel>
+                    </div>
+                  </Col>
+                  <Col span={12}>
+                    <h1> {record && record?.name} </h1>
+
+                    <p>{record && record?.description} </p>
+                    <hr />
+                    <p>{record && record?.detail} </p>
+                    <hr />
+
+                    <Row style={{ marginTop: 20 }}>
+                      <Radio.Group
+                        optionType="button"
+                        buttonStyle="solid"
+                        onChange={(el) => {
+                          setoptionColor(el.target.value);
+                        }}
+                      >
+                        {record &&
+                          record?.option
+                            ?.map((el) => el.color)
+                            ?.map((elm) => (
+                              <Radio
+                                value={elm}
+                                style={{ backgroundColor: elm }}
+                              >
+                                {elm}
+                              </Radio>
+                            ))}
+                      </Radio.Group>
+                    </Row>
+
+                    <Row style={{ marginTop: 20 }}>
+                      {recordOption &&
+                        recordOption
+                          ?.filter((el) => el.color === optionColor)[0]
+                          ?.size?.split(",")
+                          ?.map((elm) => <Tag>{elm}</Tag>)}
+                    </Row>
+
+                    <Row style={{ marginTop: 20 }}>
+                      <strong>
+                        <h2>
+                          {" "}
+                          {recordOption &&
+                            recordOption?.filter(
+                              (el) => el.color === optionColor
+                            )[0]?.price}
+                          {" € "}
+                        </h2>
+                      </strong>
+                    </Row>
+                  </Col>
+                </Row>
+              </Card>
+            </Badge.Ribbon>
+          )}
+        </Modal>
       </div>
     </>
   );

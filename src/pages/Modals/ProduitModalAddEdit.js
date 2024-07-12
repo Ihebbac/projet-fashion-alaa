@@ -66,6 +66,7 @@ const ProduitModalAddEdit = (props) => {
           sizes: el?.size?.split(","),
           stock: el?.stock,
           price: el?.price,
+          discount: el?.discount,
           id: el.id,
         })),
       });
@@ -145,6 +146,7 @@ const ProduitModalAddEdit = (props) => {
       images: images[key].join(","),
       sizes: el.sizes.join(","),
       price: Number(el.price),
+      discount: Number(el.discount),
       stock: Number(el.stock),
       color: el.colors,
       id: el?.id,
@@ -187,8 +189,6 @@ const ProduitModalAddEdit = (props) => {
           onCancel();
         });
     }
-
-    console.log("eeeeeeeeeeeeeeeee", values);
   };
 
   return (
@@ -312,11 +312,11 @@ const ProduitModalAddEdit = (props) => {
                                     "#ff8a65",
                                     "#ba68c8",
                                     "#ffffff",
-                                    "#000000"
-
+                                    "#000000",
                                   ]}
                                   color={
-                                    form.getFieldValue("options")[key].colors
+                                    form.getFieldValue("options")[key]
+                                      ?.colors ?? "#ffffff"
                                   }
                                   onChangeComplete={(val) => {
                                     let oldOption =
@@ -369,7 +369,22 @@ const ProduitModalAddEdit = (props) => {
                                   },
                                 ]}
                               >
-                                <Input placeholder="price" />
+                                <Input placeholder="price" type="number" />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={12} style={{ marginRight: 10 }}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "discount"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Missing discount name",
+                                  },
+                                ]}
+                              >
+                                <Input placeholder="discount" type="number" />
                               </Form.Item>
                             </Col>
 
@@ -384,7 +399,7 @@ const ProduitModalAddEdit = (props) => {
                                   },
                                 ]}
                               >
-                                <Input placeholder="stock" />
+                                <Input placeholder="stock" type="number" />
                               </Form.Item>
                             </Col>
                           </Row>
