@@ -27,6 +27,7 @@ import {
   notification,
   Carousel,
   Image,
+  Badge,
 } from "antd";
 import datetime from "moment";
 import {
@@ -196,12 +197,17 @@ const Categorie = () => {
       title: "updatedAt",
       key: "updatedAt",
       dataIndex: "updatedAt",
-      render: (x) => 
-        { const dateObject = datetime(x); 
-       
-          const formattedDate = dateObject.format("DD/MM/YYYY");
-          return <time>{formattedDate}</time>;
-        } 
+      render: (x) => {
+        if (!x) {
+          return <Badge className="site-badge-count-109"  style={{
+        
+          }} status="processing" text="Non modifié" />;
+        }
+    
+        const dateObject = datetime(x);
+        const formattedDate = dateObject.format("DD/MM/YYYY");
+        return <time>{formattedDate}</time>;
+      },
     },
     {
       title: "Action",
@@ -350,12 +356,10 @@ const Categorie = () => {
         </Col>
         <Col span={12}>
           <h1><strong>{record?.name}</strong></h1>
+          <hr />
           <p><strong>{record?.description}</strong></p>
-          <hr />
-          <p>{record?.createdAt}</p>
-          <hr />
-          <p>{record?.updatedAt}</p>
-          <hr />
+        
+         
         </Col>
       </Row>
     </Card>

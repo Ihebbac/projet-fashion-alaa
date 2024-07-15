@@ -66,7 +66,7 @@ import pencil from "../assets/images/pencil.svg";
 import ProduitModalAddEdit from "./Modals/ProduitModalAddEdit";
 import axios from "axios";
 import { CirclePicker } from "react-color";
-
+import datetime from "moment";
 const { Title } = Typography;
 const { confirm } = Modal;
 const formProps = {
@@ -186,13 +186,29 @@ const Produit = () => {
       title: "createdAt",
       key: "createdAt",
       dataIndex: "createdAt",
+      render: (x) => 
+        { const dateObject = datetime(x); 
+        
+          const formattedDate = dateObject.format("DD/MM/YYYY");
+          return <time>{formattedDate}</time>;
+        } 
     },
     {
       title: "updatedAt",
       key: "updatedAt",
       dataIndex: "updatedAt",
+      render: (x) => {
+        if (!x) {
+          return <Badge className="site-badge-count-109"  style={{
+        
+          }} status="processing" text="Non modifié" />;
+        }
+    
+        const dateObject = datetime(x);
+        const formattedDate = dateObject.format("DD/MM/YYYY");
+        return <time>{formattedDate}</time>;
     },
-
+  },
     {
       title: "Action",
       key: "action",

@@ -216,12 +216,17 @@ const Customers = () => {
       key: "updatedAt",
       dataIndex: "updatedAt",
       render: (x) => {
+        if (!x) {
+          return <Badge className="site-badge-count-109"  style={{
+        
+          }} status="processing" text="Non modifié" />;
+        }
+    
         const dateObject = datetime(x);
-
         const formattedDate = dateObject.format("DD/MM/YYYY");
         return <time>{formattedDate}</time>;
-      },
     },
+  },
     {
       title: "Action",
       key: "action",
