@@ -65,6 +65,7 @@ import face6 from "../assets/images/face-6.jpeg";
 import pencil from "../assets/images/pencil.svg";
 import ProduitModalAddEdit from "./Modals/ProduitModalAddEdit";
 import axios from "axios";
+import { CirclePicker } from "react-color";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -327,7 +328,8 @@ const Produit = () => {
                       </Carousel>
                     </div>
                   </Col>
-                  <Col span={12}>
+
+                  <Col span={12} style={{ padding: 15 }}>
                     <h1> {record && record?.name} </h1>
 
                     <p>{record && record?.description} </p>
@@ -336,25 +338,13 @@ const Produit = () => {
                     <hr />
 
                     <Row style={{ marginTop: 20 }}>
-                      <Radio.Group
-                        optionType="button"
-                        buttonStyle="solid"
-                        onChange={(el) => {
-                          setoptionColor(el.target.value);
+                      <CirclePicker
+                        colors={record?.option?.map((el) => el.color)}
+                        color={optionColor}
+                        onChangeComplete={(val) => {
+                          setoptionColor(val.hex);
                         }}
-                      >
-                        {record &&
-                          record?.option
-                            ?.map((el) => el.color)
-                            ?.map((elm) => (
-                              <Radio
-                                value={elm}
-                                style={{ backgroundColor: elm }}
-                              >
-                                {elm}
-                              </Radio>
-                            ))}
-                      </Radio.Group>
+                      />
                     </Row>
 
                     <Row style={{ marginTop: 20 }}>
