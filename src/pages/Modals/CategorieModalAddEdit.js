@@ -157,6 +157,7 @@ const AddOrUpdateModalCars = (props) => {
     <>
     <Modal visible={previewOpen}
     //  title={previewTitle} 
+    destroyOnClose
      footer={null} 
      onCancel={() => setPreviewOpen(!previewOpen)
       && setPreviewImage("")

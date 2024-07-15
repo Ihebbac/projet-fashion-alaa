@@ -25,6 +25,8 @@ import {
   Form,
   Input,
   notification,
+  Carousel,
+  Image,
 } from "antd";
 import datetime from "moment";
 import {
@@ -80,6 +82,7 @@ const Categorie = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [show1, setshow1] = useState(false);
   const [fileList, setFileList] = useState([
     {
       uid: "-1",
@@ -168,6 +171,7 @@ const Categorie = () => {
       title: "Déscription",
       dataIndex: "description",
       key: "description",
+      ellipsis: true,
     },
 
     {
@@ -207,7 +211,7 @@ const Categorie = () => {
       render: (_, record) => (
         <div className="action-buttons">
           <Row>
-            <Col span={12}>
+            <Col span={8} className="ms-2">
               {" "}
               <Button
                 onClick={() => {
@@ -219,8 +223,21 @@ const Categorie = () => {
                 <EditTwoTone />
               </Button>
             </Col>
-
-            <Col span={12}>
+            <Col span={8} className="ms-2">
+              {" "}
+              <Button
+                onClick={() => {
+                  setshow1(true);
+                  console.log("category record detail" , record)
+                  setrecord(record);
+                  // setrecordOption(record?.option);
+                  // setoptionColor(record?.option[0].color);
+                }}
+              >
+                <InfoCircleOutlined />
+              </Button>
+            </Col>
+            <Col span={8} className="ms-2">
               {" "}
               <Button
                 type="primary "
@@ -236,32 +253,7 @@ const Categorie = () => {
     },
   ];
 
-  // const data = [
-  //   {
-  //     "id" :1,
-  //     "name": "T-shirt pour homme",
-  //     "description": "T-shirt en coton de haute qualité pour homme.",
-  //     "thumbnailImage": "https://example.com/images/tshirt_homme.jpg",
-  //     "createdAt": "2024-01-01T12:00:00Z",
-  //     "updatedAt": "2024-01-15T12:00:00Z"
-  //   },
-  //   {
-  //     "id" :2,
-  //     "name": "Robe pour femme",
-  //     "description": "Robe élégante pour soirée pour femme.",
-  //     "thumbnailImage": "https://example.com/images/robe_femme.jpg",
-  //     "createdAt": "2024-02-01T12:00:00Z",
-  //     "updatedAt": "2024-02-15T12:00:00Z"
-  //   },
-  //   {
-  //     "id" :3,
-  //     "name": "Veste pour enfant",
-  //     "description": "Veste chaude et confortable pour enfant.",
-  //     "thumbnailImage": "https://example.com/images/veste_enfant.jpg",
-  //     "createdAt": "2024-03-01T12:00:00Z",
-  //     "updatedAt": "2024-03-15T12:00:00Z"
-  //   }
-  // ]
+
   useEffect(() => {
     axios.get("http://localhost:3003/api/v1/categories").then((response) => {
       console.log("response", response);
@@ -336,6 +328,40 @@ const Categorie = () => {
           onCancel={() => setVisible(false)}
         />
       </div>
+
+      <Modal
+  visible={show1}
+  destroyOnClose
+  width={1000}
+  footer= {false}
+  onCancel={() => setshow1(false)}
+>
+  {record && (
+    <Card>
+      <Row>
+        <Col span={12}>
+          <div className="ant-row-flex ant-row-flex-center">
+            <Carousel autoplay>
+              {record.thumbnailImage?.split(",").map((el, index) => (
+                <Image src={el} width={"90%"} key={index} />
+              ))}
+            </Carousel>
+          </div>
+        </Col>
+        <Col span={12}>
+          <h1><strong>{record?.name}</strong></h1>
+          <p><strong>{record?.description}</strong></p>
+          <hr />
+          <p>{record?.createdAt}</p>
+          <hr />
+          <p>{record?.updatedAt}</p>
+          <hr />
+        </Col>
+      </Row>
+    </Card>
+  )}
+</Modal>
+
     </>
   );
 };
