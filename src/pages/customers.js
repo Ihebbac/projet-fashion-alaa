@@ -183,6 +183,7 @@ const Customers = () => {
       title: "Nom Complet",
       dataIndex: "fullname",
       key: "fullname",
+      ellipsis: true,
     },
     {
       title: "N° Télephone",
@@ -194,11 +195,13 @@ const Customers = () => {
       title: "Email",
       key: "email",
       dataIndex: "email",
+      ellipsis: true,
     },
     {
       title: "Adresse de livraison",
       key: "shippingAddress",
       dataIndex: "shippingAddress",
+      ellipsis: true,
     },
     {
       title: "createdAt",
