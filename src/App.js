@@ -24,6 +24,7 @@ import Main from "./components/layout/Main";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
+import Admins from "./pages/Admins";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Main>
           <Route exact path="/dashboard" component={Home} />
           <Route exact path="/tables" component={Tables} />
+          <Route exact path="/admins" component={Admins} />
           <Route exact path="/categorie" component={Categorie} />
           <Route exact path="/customers" component={Customers} />
           <Route exact path="/produit" component={Produit} />
