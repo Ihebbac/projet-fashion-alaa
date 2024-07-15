@@ -30,7 +30,7 @@ import {
 } from "@ant-design/icons";
 import { isNil, isEmpty, uniq } from "lodash";
 import TextArea from "antd/lib/input/TextArea";
-import { CirclePicker } from "react-color";
+import { SwatchesPicker } from "react-color";
 
 const ProduitModalAddEdit = (props) => {
   const { visible, onCancel } = props;
@@ -300,20 +300,20 @@ const ProduitModalAddEdit = (props) => {
                                   },
                                 ]}
                               >
-                                <CirclePicker
-                                  colors={[
-                                    "#D9E3F0",
-                                    "#F47373",
-                                    "#697689",
-                                    "#37D67A",
-                                    "#2CCCE4",
-                                    "#555555",
-                                    "#dce775",
-                                    "#ff8a65",
-                                    "#ba68c8",
-                                    "#ffffff",
-                                    "#000000",
-                                  ]}
+                                <SwatchesPicker
+                                  // colors={[
+                                  //   "#D9E3F0",
+                                  //   "#F47373",
+                                  //   "#697689",
+                                  //   "#37D67A",
+                                  //   "#2CCCE4",
+                                  //   "#555555",
+                                  //   "#dce775",
+                                  //   "#ff8a65",
+                                  //   "#ba68c8",
+                                  //   "#ffffff",
+                                  //   "#000000",
+                                  // ]}
                                   color={
                                     form.getFieldValue("options")[key]
                                       ?.colors ?? "#ffffff"
