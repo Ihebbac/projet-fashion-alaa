@@ -62,6 +62,7 @@ import face5 from "../assets/images/face-5.jpeg";
 import face6 from "../assets/images/face-6.jpeg";
 import pencil from "../assets/images/pencil.svg";
 import CategorieModalAddEdit from "./Modals/CategorieModalAddEdit.js";
+import CollectionModalAddEdit from "./Modals/CollectionModalAddEdit.js";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -326,7 +327,7 @@ const Collections = () => {
             </Card>
           </Col>
         </Row>
-        <CategorieModalAddEdit
+        <CollectionModalAddEdit
           visible={visible}
           record={action === "EDIT" ? record : {}}
           refetech={handrefetech}
