@@ -26,6 +26,7 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import Orders from "./pages/orders";
 import Admins from "./pages/Admins";
+import Collections from "./pages/collections";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route exact path="/tables" component={Tables} />
           <Route exact path="/admins" component={Admins} />
           <Route exact path="/categorie" component={Categorie} />
+          <Route exact path="/collections" component={Collections} />
           <Route exact path="/orders" component={Orders} />
           <Route exact path="/customers" component={Customers} />
           <Route exact path="/produit" component={Produit} />
