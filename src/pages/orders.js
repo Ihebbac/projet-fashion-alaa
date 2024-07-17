@@ -62,6 +62,7 @@ import face5 from "../assets/images/face-5.jpeg";
 import face6 from "../assets/images/face-6.jpeg";
 import pencil from "../assets/images/pencil.svg";
 import CategorieModalAddEdit from "./Modals/CategorieModalAddEdit.js";
+import { CirclePicker } from "react-color";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -115,22 +116,21 @@ const Orders = () => {
   const show = (dar) => {
     console.log("ihekkkkk", dar);
   };
-  const showPromiseConfirm = (alldata, dataDelete) => {
-    console.log("d", alldata);
+  const showPromiseConfirm = (alldata) => {
+    console.log("dddddddddddddd", alldata);
     confirm({
-      title: "Vous voulez supprimer " + alldata.name + "?",
+      title: "Vous voulez supprimer " + alldata.orderNumber + "?",
       icon: <ExclamationCircleOutlined />,
       content:
-        "lorsque vous appuillez sur ok la catégorie : " +
-        alldata.name +
+        "lorsque vous appuillez sur ok la Commandes N° : " +
+        alldata.orderNumber +
         " " +
         " sera supprimer !",
 
       async onOk() {
-        console.log("Success delete ", dataDelete);
         setisload(true);
         await axios
-          .delete(`http://localhost:3003/api/v1/orders/${alldata.id}`)
+          .delete(`http://localhost:3003/api/v1/orders/${alldata.orderNumber}`)
           .then(function (response) {
             handrefetech();
             setisload(false);
@@ -139,25 +139,11 @@ const Orders = () => {
             console.log(err);
             setisload(false);
           });
-        message.success("Catégorie supprimer avec succee..................");
+        message.success("Commande Supprimer Avec Succee !");
       },
       onCancel() {},
     });
   };
-
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </div>
-  );
 
   const columns = [
     {
@@ -167,19 +153,23 @@ const Orders = () => {
       render: (text, record) => <p>{record?.customer?.fullname}</p>,
     },
     {
-      title: "totalPrice",
+      title: "Total Price",
       dataIndex: "totalPrice",
       key: "totalPrice",
       render: (text, record) => <p>{record?.totalPrice} €</p>,
     },
     {
-      title: "shippingAddress",
+      title: "Shipping Address",
       dataIndex: "shippingAddress",
       key: "shippingAddress",
     },
-
     {
-      title: "orderDate",
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "Order Date",
       key: "orderDate",
       dataIndex: "orderDate",
       render: (x) => {
@@ -233,18 +223,6 @@ const Orders = () => {
               {" "}
               <Button
                 onClick={() => {
-                  setVisible(true);
-                  setrecord(record);
-                  setAction("EDIT");
-                }}
-              >
-                <EditTwoTone />
-              </Button>
-            </Col>
-            <Col span={8} className="ms-2">
-              {" "}
-              <Button
-                onClick={() => {
                   setshow1(true);
                   console.log("category record detail", record);
                   setrecord(record);
@@ -261,7 +239,7 @@ const Orders = () => {
               <Button
                 type="primary "
                 danger
-                onClick={() => showPromiseConfirm(record, record.id)}
+                onClick={() => showPromiseConfirm(record)}
               >
                 <DeleteTwoTone twoToneColor="#FFFFFF" />
               </Button>
@@ -295,19 +273,21 @@ const Orders = () => {
       title: "Product color",
       dataIndex: "proOptions",
       key: "proOptions",
-      render: (text, record) => <p>{record?.proOptions.color}</p>,
+      render: (text, record) => (
+        <CirclePicker colors={[record?.proOptions.color]} />
+      ),
     },
     {
       title: "Product price",
       dataIndex: "proOptions",
       key: "proOptions",
-      render: (text, record) => <p>{record?.proOptions.price}</p>,
+      render: (text, record) => <p>{record?.proOptions.price} € </p>,
     },
     {
       title: "Product size",
       dataIndex: "proOptions",
       key: "proOptions",
-      render: (text, record) => <p>{record?.proOptions.size}</p>,
+      render: (text, record) => <p>{record?.size}</p>,
     },
   ];
 
@@ -323,23 +303,23 @@ const Orders = () => {
       }
     });
   }, [refetech]);
-  const onFinish = async (values) => {
-    setisload(true);
-    console.log("valuesssssss", values);
-    // const res = await axios
-    // .post(`http://localhost:3003/api/v1/orders/${values}`)
-    // .then(function (response) {
-    //   // handrefetech();
-    //   setisload(false);
-    // })
-    // .catch(function (err) {
-    //   console.log(err);
-    //   setisload(false);
-    // });
 
-    // console.log("data received:", res);
-    form.resetFields();
+  const handelUpdate = async (status) => {
+    await axios
+      .put(`http://localhost:3003/api/v1/orders/${record?.orderNumber}`, {
+        status: status,
+      })
+      .then(function (response) {
+        handrefetech();
+        setisload(false);
+      })
+      .catch(function (err) {
+        console.log(err);
+        setisload(false);
+      });
+    message.success("Commande Supprimer Avec Succee !");
   };
+
   return (
     <>
       <div className="tabled">
@@ -350,20 +330,6 @@ const Orders = () => {
               loading={isload}
               className="criclebox tablespace mb-24"
               title="Liste des Commandes"
-              // extra={
-              //   <>
-              //     <Button
-              //       type="primary"
-              //       onClick={() => {
-              //         setVisible(true);
-              //         setrecord({});
-              //         setAction("ADD");
-              //       }}
-              //     >
-              //       Ajouter une catégorie
-              //     </Button>
-              //   </>
-              // }
             >
               <div className="table-responsive">
                 <Table
@@ -404,6 +370,30 @@ const Orders = () => {
                 />
               </div>
             )}
+
+            <h3> Nom du Client: {record && record?.customer?.fullname} </h3>
+            <h3> Commande: {record && record?.orders?.length} article(s) </h3>
+            <h2>
+              <strong> Total : {record && record?.totalPrice} € </strong>{" "}
+            </h2>
+            <Button
+              onClick={() => {
+                handelUpdate("valide");
+              }}
+              type="primary"
+              style={{ marginRight: 15, marginTop: 15 }}
+            >
+              Valider la Commande{" "}
+            </Button>
+            <Button
+              onClick={() => {
+                handelUpdate("annuler");
+              }}
+              danger
+              style={{ marginTop: 15 }}
+            >
+              Annuler la Commande{" "}
+            </Button>
           </Card>
         )}
       </Modal>
