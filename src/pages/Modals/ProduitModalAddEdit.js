@@ -36,6 +36,7 @@ const ProduitModalAddEdit = (props) => {
   const { visible, onCancel } = props;
   const [Loading, setLoading] = useState(false);
   const [cat, setcat] = useState([]);
+  const [collection, setcollection] = useState([]);
   const [images, setimages] = useState([]);
   const serverURL = "http://127.0.0.1:3003";
 
@@ -51,9 +52,19 @@ const ProduitModalAddEdit = (props) => {
       }
     });
 
+    axios.get("http://localhost:3003/api/v1/collection").then((response) => {
+      console.log("response", response);
+      if (response.data.data) {
+        setcollection(response.data.data);
+      } else {
+        notification.error({ message: "No Data Found" });
+      }
+    });
+
     if (props.type === "EDIT") {
       form.setFieldsValue({
         categoryId: props?.record.categoryId,
+        collectionId: props?.record.collectionId,
         description: props?.record.description,
         detail: props?.record.detail,
         name: props?.record.name,
@@ -243,6 +254,26 @@ const ProduitModalAddEdit = (props) => {
                   <Select
                     placeholder="category"
                     options={cat.map((el) => ({
+                      value: el.id,
+                      label: el.name,
+                    }))}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={24}>
+                <Form.Item
+                  name="collectionId"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your collectionId!",
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="collection"
+                    options={collection.map((el) => ({
                       value: el.id,
                       label: el.name,
                     }))}
