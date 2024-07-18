@@ -94,6 +94,7 @@ const ProduitModalAddEdit = (props) => {
       setimages(list);
     } else {
       form.setFieldsValue({});
+      form.resetFields()
       setimages([]);
     }
   }, [form, props.record, props.visibl]);

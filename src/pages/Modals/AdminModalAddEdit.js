@@ -44,6 +44,7 @@ const AddOrUpdateAdmin = (props) => {
         ...props?.record,
       });
     } else {
+      form.resetFields();
       form.setFieldsValue({
         images: [],
       });
@@ -112,14 +113,14 @@ const AddOrUpdateAdmin = (props) => {
     console.log("values", values);
     const img = form.getFieldValue("images");
     if (props.type === "EDIT") {
-      console.log('edit' , values)
+      console.log("edit", values);
       await axios
         .put("http://127.0.0.1:3003/api/v1/admins/" + values.id, {
           username: values?.username,
           password: values?.password,
           email: values?.email,
           role: "ADMIN",
-          active : values?.status,
+          active: values?.status,
         })
         .then((response) => {
           notification.success({ message: "Update Done  " });
@@ -135,7 +136,7 @@ const AddOrUpdateAdmin = (props) => {
       await axios
         .post("http://127.0.0.1:3003/api/v1/admins", {
           email: values?.email,
-          username : values?.username,
+          username: values?.username,
           password: values?.password,
           role: "ADMIN",
         })
@@ -188,7 +189,7 @@ const AddOrUpdateAdmin = (props) => {
           }}
           width={1000}
           onCancel={onCancel}
-           className="criclebox "
+          className="criclebox "
         >
           <Form
             form={form}
@@ -202,7 +203,7 @@ const AddOrUpdateAdmin = (props) => {
                 height: "100%",
               }}
               hoverable
-               className="criclebox "
+              className="criclebox "
             >
               <Row justify="space-between" gutter={16}>
                 <Col span={24}>
