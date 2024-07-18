@@ -170,6 +170,7 @@ const ProduitModalAddEdit = (props) => {
           description: values.description,
           detail: values.detail,
           categoryId: values.categoryId,
+          collectionId: values.collectionId,
           option: option,
         })
         .then((response) => {
@@ -188,6 +189,7 @@ const ProduitModalAddEdit = (props) => {
           description: values.description,
           detail: values.detail,
           categoryId: values.categoryId,
+          collectionId: values.collectionId,
           option: option,
         })
         .then((response) => {
