@@ -3048,12 +3048,12 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
 }
 .site-card-border-less-wrapper {
   padding: 30px;
-  background: #ececec;
+  /* background: #ececec; */
 }
 .card-container {
   position: relative;
-height: 100vh;
-overflow:auto;
+  height: 100vh;
+  overflow: auto;
 }
 
 .videoTag {
@@ -3068,7 +3068,7 @@ overflow:auto;
 
 .transparent-card {
   position: relative;
-  background-color: rgb(0 0 0 / 44%); 
+  background-color: rgb(0 0 0 / 44%);
   z-index: 1;
   /* border-radius: 500px 200px; */
 }
