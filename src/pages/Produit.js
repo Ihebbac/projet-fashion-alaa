@@ -45,6 +45,7 @@ import {
   PhoneOutlined,
   MailOutlined,
   AppstoreAddOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { ToTopOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -120,6 +121,7 @@ const Produit = () => {
 
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState("");
+  const [search, setSearch] = useState("");
   const [record, setrecord] = useState(null);
   const [recordOption, setrecordOption] = useState(null);
   const [refetech, setrefetech] = useState(false);
@@ -186,12 +188,12 @@ const Produit = () => {
       title: "createdAt",
       key: "createdAt",
       dataIndex: "createdAt",
-      render: (x) => 
-        { const dateObject = datetime(x); 
-        
-          const formattedDate = dateObject.format("DD/MM/YYYY");
-          return <time>{formattedDate}</time>;
-        } 
+      render: (x) => {
+        const dateObject = datetime(x);
+
+        const formattedDate = dateObject.format("DD/MM/YYYY");
+        return <time>{formattedDate}</time>;
+      },
     },
     {
       title: "updatedAt",
@@ -199,16 +201,21 @@ const Produit = () => {
       dataIndex: "updatedAt",
       render: (x) => {
         if (!x) {
-          return <Badge className="site-badge-count-109"  style={{
-        
-          }} status="processing" text="Non modifié" />;
+          return (
+            <Badge
+              className="site-badge-count-109"
+              style={{}}
+              status="processing"
+              text="Non modifié"
+            />
+          );
         }
-    
+
         const dateObject = datetime(x);
         const formattedDate = dateObject.format("DD/MM/YYYY");
         return <time>{formattedDate}</time>;
+      },
     },
-  },
     {
       title: "Action",
       key: "action",
@@ -257,6 +264,19 @@ const Produit = () => {
     },
   ];
 
+  const handelrecherche = () => {
+    axios
+      .get("http://127.0.0.1:3003/api/v1/products/search?q=" + search)
+      .then((response) => {
+        console.log("response", response);
+        if (response.data.data) {
+          setData(response.data.data);
+        } else {
+          notification.error({ message: "No Data Found" });
+        }
+      });
+  };
+
   return (
     <>
       <h1>Produit</h1>
@@ -268,7 +288,22 @@ const Produit = () => {
               className="criclebox tablespace mb-24"
               title="Liste des produits"
               extra={
-                <>
+                <div className="d-flex">
+                  <Input
+                    style={{ marginRight: 25 }}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                  />
+                  <Button
+                    style={{ marginRight: 25 }}
+                    onClick={() => {
+                      handelrecherche();
+                    }}
+                  >
+                    {" "}
+                    Rechercher
+                  </Button>
                   <Button
                     type="primary"
                     onClick={() => {
@@ -279,7 +314,7 @@ const Produit = () => {
                   >
                     Ajouter un produit
                   </Button>
-                </>
+                </div>
               }
             >
               <div className="table-responsive">

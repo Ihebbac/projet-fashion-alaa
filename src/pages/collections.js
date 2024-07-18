@@ -310,7 +310,7 @@ const Collections = () => {
                       setAction("ADD");
                     }}
                   >
-                    Ajouter une catégorie
+                    Ajouter une collection
                   </Button>
                 </>
               }
