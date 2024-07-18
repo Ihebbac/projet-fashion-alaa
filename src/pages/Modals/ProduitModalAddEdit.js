@@ -94,6 +94,7 @@ const ProduitModalAddEdit = (props) => {
       setimages(list);
     } else {
       form.setFieldsValue({});
+      form.resetFields()
       setimages([]);
     }
   }, [form, props.record, props.visibl]);
@@ -170,6 +171,7 @@ const ProduitModalAddEdit = (props) => {
           description: values.description,
           detail: values.detail,
           categoryId: values.categoryId,
+          collectionId: values.collectionId,
           option: option,
         })
         .then((response) => {
@@ -188,6 +190,7 @@ const ProduitModalAddEdit = (props) => {
           description: values.description,
           detail: values.detail,
           categoryId: values.categoryId,
+          collectionId: values.collectionId,
           option: option,
         })
         .then((response) => {

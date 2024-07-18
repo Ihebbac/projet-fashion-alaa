@@ -42,6 +42,7 @@ const CollectionModalAddEdit = (props) => {
         images: [props?.record.thumbnailImage],
       });
     } else {
+      form.resetFields()
       form.setFieldsValue({
         images: [],
       });
