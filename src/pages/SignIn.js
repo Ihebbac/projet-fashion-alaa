@@ -214,7 +214,7 @@ const SignIn = () => {
             />
           </video>
           <Card
-              bordered={false}
+              
            className="transparent-card"
           >
             {" "}
