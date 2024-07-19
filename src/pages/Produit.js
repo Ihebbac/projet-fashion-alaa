@@ -341,6 +341,7 @@ const Produit = () => {
           destroyOnClose
           width={1000}
           onCancel={() => setshow(false)}
+          footer={false}
         >
           {record && (
             <Badge.Ribbon
