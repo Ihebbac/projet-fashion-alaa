@@ -18,16 +18,13 @@ import {
   Spin,
   Tag,
   Upload,
+  Image,
 } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import React, { useEffect, useState } from "react";
 import { notification } from "antd";
 import axios from "axios";
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-  VerticalAlignTopOutlined,
-} from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined, VerticalAlignTopOutlined } from "@ant-design/icons";
 import { isNil, isEmpty, uniq } from "lodash";
 import TextArea from "antd/lib/input/TextArea";
 import { SwatchesPicker } from "react-color";
@@ -38,6 +35,8 @@ const ProduitModalAddEdit = (props) => {
   const [cat, setcat] = useState([]);
   const [collection, setcollection] = useState([]);
   const [images, setimages] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
   const serverURL = "http://127.0.0.1:3003";
 
   const [form] = useForm();
@@ -84,20 +83,22 @@ const ProduitModalAddEdit = (props) => {
 
       let list = [];
       props?.record.option.forEach((el) => {
-        list = [
-          ...list,
-          isEmpty(el?.images?.split(",")) ? [] : el?.images?.split(","),
-        ];
+        list = [...list, isEmpty(el?.images?.split(",")) ? [] : el?.images?.split(",")];
       });
 
       console.log("list", list);
       setimages(list);
     } else {
       form.setFieldsValue({});
-      form.resetFields()
+      form.resetFields();
       setimages([]);
     }
   }, [form, props.record, props.visibl]);
+
+  const handlePreview = async (file) => {
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
 
   const handleChange = async (info, key) => {
     const oldimges = [...images];
@@ -206,11 +207,7 @@ const ProduitModalAddEdit = (props) => {
   };
 
   return (
-    <Form
-      form={form}
-      onFinish={handleonfinish}
-      preserve={props.type === "EDIT" ? true : false}
-    >
+    <Form form={form} onFinish={handleonfinish} preserve={props.type === "EDIT" ? true : false}>
       <div className="site-card-border-less-wrapper">
         <Modal
           title={props.type === "EDIT" ? "UPDATE" : "CREATE sssssss"}
@@ -319,11 +316,7 @@ const ProduitModalAddEdit = (props) => {
                       {fields.map(({ key, name, ...restField }) => (
                         <>
                           <Row>
-                            <Col
-                              span={12}
-                              style={{ marginRight: 10 }}
-                              className="ms-1"
-                            >
+                            <Col span={12} style={{ marginRight: 10 }} className="ms-1">
                               <Form.Item
                                 {...restField}
                                 name={[name, "colors"]}
@@ -348,13 +341,9 @@ const ProduitModalAddEdit = (props) => {
                                   //   "#ffffff",
                                   //   "#000000",
                                   // ]}
-                                  color={
-                                    form.getFieldValue("options")[key]
-                                      ?.colors ?? "#ffffff"
-                                  }
+                                  color={form.getFieldValue("options")[key]?.colors ?? "#ffffff"}
                                   onChangeComplete={(val) => {
-                                    let oldOption =
-                                      form.getFieldValue("options");
+                                    let oldOption = form.getFieldValue("options");
                                     oldOption[key] = {
                                       ...oldOption[key],
                                       colors: val.hex,
@@ -441,71 +430,67 @@ const ProduitModalAddEdit = (props) => {
                           <Row>
                             <Col md={12}>
                               <Form.Item shouldUpdate noStyle>
-                                {({ getFieldValue }) => {
-                                  return (
-                                    <Form.Item
-                                      name={[name, "images"]}
-                                      {...restField}
+                                <Form.Item name={[name, "images"]} {...restField}>
+                                  <Upload
+                                    key={key}
+                                    className="avatar-uploader projects-uploader"
+                                    onChange={(val) => handleChange(val, key)}
+                                    onRemove={(val) => {
+                                      const oldimges = [...images];
+
+                                      if (!isEmpty(oldimges[key])) {
+                                        oldimges[key] = oldimges[key].filter((el) => el !== val.name);
+
+                                        setimages(oldimges);
+                                      }
+                                    }}
+                                    onDrop={(val) => handleChange(val, key)}
+                                    listType="picture-card"
+                                    onPreview={handlePreview}
+                                    fileList={
+                                      !isEmpty(images) && !isNil(images) && !isNil(images[key])
+                                        ? images[key]?.map((el, i) => ({
+                                            uid: -i,
+                                            name: el,
+                                            status: "done",
+                                            url: el,
+                                          }))
+                                        : []
+                                    }
+                                    multiple={false}
+                                  >
+                                    <Button
+                                      icon={
+                                        <VerticalAlignTopOutlined
+                                          style={{
+                                            width: 20,
+                                            color: "#000",
+                                          }}
+                                        />
+                                      }
                                     >
-                                      <Upload
-                                        className="avatar-uploader projects-uploader"
-                                        onChange={(val) =>
-                                          handleChange(val, key)
-                                        }
-                                        onRemove={(val) => {
-                                          const oldimges = [...images];
-
-                                          if (!isEmpty(oldimges[key])) {
-                                            oldimges[key] = oldimges[
-                                              key
-                                            ].filter((el) => el !== val.name);
-
-                                            setimages(oldimges);
-                                          }
-                                        }}
-                                        onDrop={(val) => handleChange(val, key)}
-                                        listType="picture-card"
-                                        fileList={
-                                          !isEmpty(images) &&
-                                          !isNil(images) &&
-                                          !isNil(images[key])
-                                            ? images[key]?.map((el, i) => ({
-                                                uid: -i,
-                                                name: el,
-                                                status: "done",
-                                                url: el,
-                                              }))
-                                            : []
-                                        }
-                                        multiple={false}
-                                      >
-                                        <Button
-                                          icon={
-                                            <VerticalAlignTopOutlined
-                                              style={{
-                                                width: 20,
-                                                color: "#000",
-                                              }}
-                                            />
-                                          }
-                                        >
-                                          Upload Images
-                                        </Button>
-                                      </Upload>
-                                    </Form.Item>
-                                  );
-                                }}
+                                      Upload Images
+                                    </Button>
+                                  </Upload>
+                                  {previewImage && (
+                                    <Image
+                                      wrapperStyle={{
+                                        display: "none",
+                                      }}
+                                      preview={{
+                                        visible: previewOpen,
+                                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                                        afterOpenChange: (visible) => !visible && setPreviewImage(""),
+                                      }}
+                                      src={previewImage}
+                                    />
+                                  )}
+                                </Form.Item>
                               </Form.Item>
                             </Col>
 
-                            <Col
-                              span={6}
-                              style={{ marginRight: 25, marginTop: 10 }}
-                            >
-                              <MinusCircleOutlined
-                                onClick={() => remove(name)}
-                                style={{ marginLeft: 40, marginTop: 10 }}
-                              />
+                            <Col span={6} style={{ marginRight: 25, marginTop: 10 }}>
+                              <MinusCircleOutlined onClick={() => remove(name)} style={{ marginLeft: 40, marginTop: 10 }} />
                             </Col>
                           </Row>
 
@@ -513,12 +498,7 @@ const ProduitModalAddEdit = (props) => {
                         </>
                       ))}
                       <Form.Item>
-                        <Button
-                          type="dashed"
-                          onClick={() => add()}
-                          block
-                          icon={<PlusOutlined />}
-                        >
+                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                           Ajouter une Option
                         </Button>
                       </Form.Item>
