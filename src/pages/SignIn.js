@@ -206,103 +206,57 @@ const SignIn = () => {
             </div> */}
         </Header>
         <div className="card-container">
-          {" "}
-          <video className="videoTag" autoPlay loop muted>
-            <source
-              src={imagee}
-              type="video/mp4"
-            />
-          </video>
-          <Card
-              
-           className="transparent-card"
-          >
-            {" "}
-            <Content className="signin">
-              <Row gutter={[24, 0]} justify="space-around">
-                <Col
-                  xs={{ span: 24, offset: 0 }}
-                  lg={{ span: 6, offset: 2 }}
-                  md={{ span: 12 }}
+      <video className="videoTag" autoPlay loop muted>
+        <source src={imagee} type="video/mp4" />
+      </video>
+      <Card className="transparent-card">
+        <div className="signin">
+          <Row gutter={[24, 0]} justify="space-around">
+            <Col xs={{ span: 24, offset: 0 }} lg={{ span: 6, offset: 2 }} md={{ span: 12 }}>
+              <Title className="mb-15" level={3} style={{ color: '#ffffffa3' }}>Se connecter...</Title>
+              <Title className="font-regular text-muted" level={5}>
+                Entrez votre adresse e-mail et votre mot de passe pour vous connecter
+              </Title>
+              <Form onFinish={onFinish} onFinishFailed={onFinishFailed} layout="vertical" className="row-col">
+                <Form.Item
+                  className="username"
+                  name="email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Veuillez entrer votre adresse e-mail!",
+                    },
+                  ]}
                 >
-                  <Title className="mb-15" style={{ color: '#ffffffa3' }}>Se connecter...</Title>
-                  <Title className="font-regular text-muted" level={5}>
-                    Entrez votre adresse e-mail et votre mot de passe pour vous
-                    connecter
-                  </Title>
-                  <Form
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    layout="vertical"
-                    className="row-col"
-                  >
-                    <Form.Item
-                      className="username"
-                  
-                      name="email"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Veuillez entrer votre adresse e-mail!",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Email" />
-                    </Form.Item>
-
-                    <Form.Item
-                      className="username"
-               
-                      name="password"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Veuillez entrer votre mot de passe !",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Mot de passe " />
-                    </Form.Item>
-
-                    <Form.Item
-                      name="remember"
-                      className="aligin-center"
-                      valuePropName="checked"
-                    >
-                      <Switch defaultChecked onChange={onChange} />
-                      Se souvenir de moi
-                    </Form.Item>
-
-                    <Form.Item>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        style={{ width: "100%" }}
-                      >
-                        SE CONNECTER
-                      </Button>
-                    </Form.Item>
-                    {/* <p className="font-semibold text-muted">
-                    Don't have an account?{" "}
-                    <Link to="/sign-up" className="text-dark font-bold">
-                      Sign Up
-                    </Link>
-                  </p> */}
-                  </Form>
-                </Col>
-                {/* <Col
-                  className="sign-img"
-                  style={{ padding: 12 }}
-                  xs={{ span: 24 }}
-                  lg={{ span: 12 }}
-                  md={{ span: 12 }}
+                  <Input placeholder="Email" />
+                </Form.Item>
+                <Form.Item
+                  className="username"
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Veuillez entrer votre mot de passe !",
+                    },
+                  ]}
                 >
-                  <img src={signinbg} alt="" />
-                </Col> */}
-              </Row>
-            </Content>
-          </Card>
+                  <Input type="password" placeholder="Mot de passe" />
+                </Form.Item>
+                <Form.Item name="remember" className="aligin-center" valuePropName="checked">
+                  <Switch defaultChecked onChange={onChange} />
+                  Se souvenir de moi
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    SE CONNECTER
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Col>
+          </Row>
         </div>
+      </Card>
+    </div>
 
       
       </Layout>

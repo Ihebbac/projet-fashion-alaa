@@ -3053,7 +3053,11 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
 .card-container {
   position: relative;
   height: 100vh;
-  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .videoTag {
@@ -3067,10 +3071,59 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
 }
 
 .transparent-card {
+  position: relative;
+  z-index: 1;
   border-radius: 12px;
-  background-color: rgb(0 0 0 / 44%);
+  background-color: rgba(0, 0, 0, 0.6);
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
-  /* height: 410px; */
-  margin: 8rem auto 8.1rem auto;
-  width: 60%;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  color: #ffffffa3;
+}
+
+.signin {
+  text-align: center;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.font-regular {
+  font-weight: 400;
+}
+
+.text-muted {
+  color: #ffffffa3;
+}
+
+.row-col .username {
+  margin-bottom: 1rem;
+}
+
+.row-col .aligin-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row-col .aligin-center .ant-switch {
+  margin-right: 0.5rem;
+}
+
+.row-col .ant-form-item {
+  margin-bottom: 1.5rem;
+}
+
+.row-col .ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  width: 100%;
+}
+
+.row-col .ant-btn-primary:hover,
+.row-col .ant-btn-primary:focus {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
 }
