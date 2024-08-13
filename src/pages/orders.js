@@ -265,28 +265,28 @@ const Orders = () => {
 
     {
       title: "Product Name",
-      dataIndex: "proOptions",
-      key: "proOptions",
-      render: (text, record) => <p>{record?.proOptions.product.name}</p>,
+      dataIndex: "prooptions",
+      key: "prooptions",
+      render: (text, record) => <p>{record?.prooptions?.product?.name}</p>,
     },
     {
       title: "Product color",
-      dataIndex: "proOptions",
-      key: "proOptions",
+      dataIndex: "prooptions",
+      key: "prooptions",
       render: (text, record) => (
-        <CirclePicker colors={[record?.proOptions.color]} />
+        <CirclePicker colors={[record?.prooptions?.color]} />
       ),
     },
     {
       title: "Product price",
-      dataIndex: "proOptions",
-      key: "proOptions",
-      render: (text, record) => <p>{record?.proOptions.price} € </p>,
+      dataIndex: "prooptions",
+      key: "prooptions",
+      render: (text, record) => <p>{record?.prooptions?.price} € </p>,
     },
     {
       title: "Product size",
-      dataIndex: "proOptions",
-      key: "proOptions",
+      dataIndex: "prooptions",
+      key: "prooptions",
       render: (text, record) => <p>{record?.size}</p>,
     },
   ];
@@ -319,6 +319,9 @@ const Orders = () => {
       });
     message.success("Commande Supprimer Avec Succee !");
   };
+
+  console.log("eddddddddddddddddd", record);
+
 
   return (
     <>
