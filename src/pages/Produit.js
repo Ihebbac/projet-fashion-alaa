@@ -290,10 +290,11 @@ const Produit = () => {
               extra={
                 <div className="d-flex">
                   <Input
-                    style={{ marginRight: 25 }}
+                    style={{ marginRight: 25 ,    height: '36px' }}
                     onChange={(e) => {
                       setSearch(e.target.value);
                     }}
+                    allowClear
                   />
                   <Button
                     style={{ marginRight: 25 }}

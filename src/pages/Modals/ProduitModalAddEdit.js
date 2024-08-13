@@ -195,7 +195,7 @@ const ProduitModalAddEdit = (props) => {
           option: option,
         })
         .then((response) => {
-          notification.success({ message: "Create Done  " });
+          notification.success({ message: "Produit ajouter avec succée  " });
           props.refetech();
           onCancel();
         })
@@ -210,7 +210,7 @@ const ProduitModalAddEdit = (props) => {
     <Form form={form} onFinish={handleonfinish} preserve={props.type === "EDIT" ? true : false}>
       <div className="site-card-border-less-wrapper">
         <Modal
-          title={props.type === "EDIT" ? "UPDATE" : "CREATE sssssss"}
+          title={props.type === "EDIT" ? "Mise à jour" : "Ajout d'un (ou plusieurs) produit"}
           visible={visible}
           destroyOnClose
           onOk={() => {

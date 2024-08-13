@@ -77,7 +77,6 @@ const getBase64 = (file) =>
 
 // project table start
 
-
 const Categorie = () => {
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -160,7 +159,6 @@ const Categorie = () => {
     </div>
   );
 
- 
   const columns = [
     { title: "Id", dataIndex: "id", key: "id" },
     {
@@ -185,13 +183,12 @@ const Categorie = () => {
       title: "createdAt",
       key: "createdAt",
       dataIndex: "createdAt",
-      render: (x) => 
-        { const dateObject = datetime(x); 
-        
-          const formattedDate = dateObject.format("DD/MM/YYYY");
-          return <time>{formattedDate}</time>;
-        } 
-      
+      render: (x) => {
+        const dateObject = datetime(x);
+
+        const formattedDate = dateObject.format("DD/MM/YYYY");
+        return <time>{formattedDate}</time>;
+      },
     },
     {
       title: "updatedAt",
@@ -199,11 +196,16 @@ const Categorie = () => {
       dataIndex: "updatedAt",
       render: (x) => {
         if (!x) {
-          return <Badge className="site-badge-count-109"  style={{
-        
-          }} status="processing" text="Non modifié" />;
+          return (
+            <Badge
+              className="site-badge-count-109"
+              style={{}}
+              status="processing"
+              text="Non modifié"
+            />
+          );
         }
-    
+
         const dateObject = datetime(x);
         const formattedDate = dateObject.format("DD/MM/YYYY");
         return <time>{formattedDate}</time>;
@@ -213,7 +215,7 @@ const Categorie = () => {
       title: "Action",
       key: "action",
       width: 200,
-      fixed: 'right',
+      fixed: "right",
       render: (_, record) => (
         <div className="action-buttons">
           <Row>
@@ -234,7 +236,7 @@ const Categorie = () => {
               <Button
                 onClick={() => {
                   setshow1(true);
-                  console.log("category record detail" , record)
+                  console.log("category record detail", record);
                   setrecord(record);
                   // setrecordOption(record?.option);
                   // setoptionColor(record?.option[0].color);
@@ -258,7 +260,6 @@ const Categorie = () => {
       ),
     },
   ];
-
 
   useEffect(() => {
     axios.get("http://localhost:3003/api/v1/categories").then((response) => {
@@ -318,7 +319,6 @@ const Categorie = () => {
                 <Table
                   columns={columns}
                   dataSource={data}
-                  
                   pagination={true}
                   className="ant-border-space"
                 />
@@ -336,36 +336,37 @@ const Categorie = () => {
       </div>
 
       <Modal
-  visible={show1}
-  destroyOnClose
-  width={1000}
-  footer= {false}
-  onCancel={() => setshow1(false)}
->
-  {record && (
-    <Card>
-      <Row>
-        <Col span={12}>
-          <div className="ant-row-flex ant-row-flex-center">
-            <Carousel autoplay>
-              {record.thumbnailImage?.split(",").map((el, index) => (
-                <Image src={el} width={"90%"} key={index} />
-              ))}
-            </Carousel>
-          </div>
-        </Col>
-        <Col span={12}>
-          <h1><strong>{record?.name}</strong></h1>
-          <hr />
-          <p><strong>{record?.description}</strong></p>
-        
-         
-        </Col>
-      </Row>
-    </Card>
-  )}
-</Modal>
-
+        visible={show1}
+        destroyOnClose
+        width={1000}
+        footer={false}
+        onCancel={() => setshow1(false)}
+      >
+        {record && (
+          <Card>
+            <Row>
+              <Col span={12}>
+                <div className="ant-row-flex ant-row-flex-center">
+                  <Carousel autoplay>
+                    {record.thumbnailImage?.split(",").map((el, index) => (
+                      <Image src={el} width={"90%"} key={index} />
+                    ))}
+                  </Carousel>
+                </div>
+              </Col>
+              <Col span={12}>
+                <h1>
+                  <strong>{record?.name}</strong>
+                </h1>
+                <hr />
+                <p>
+                  <strong>{record?.description}</strong>
+                </p>
+              </Col>
+            </Row>
+          </Card>
+        )}
+      </Modal>
     </>
   );
 };
